@@ -5,27 +5,34 @@ Player::Player(sf::Vector2f size, float speed)
 	this->player.setSize(size);
 	this->speed = speed;
 	this->size = size;
-	this->player.setPosition(sf::Vector2f(300, 100));
+	this->initialPosition = sf::Vector2f(300, 200);
+	this->player.setPosition(initialPosition);
 	this->player.setOrigin(sf::Vector2f(size.x / 2, size.y / 2));
 	this->player.setFillColor(sf::Color::Red);
-	this->velocity.x = 0.0f;
-	this->velocity.y = 0.0f;
-	this->onAir = true;
+	this->isOnAir = true;
+	this->isOnAnyBlock = false;
+
+	this->viewport.reset(sf::FloatRect(0, 0, 800.f, 600.f));
+	this->viewport.setSize(sf::Vector2f(600, 400));
+	this->viewport.setViewport(sf::FloatRect(0, 0, 1, 1));
 }
 
 void Player::render(sf::RenderWindow& window)
 {
+	window.setView(this->viewport);
 	window.draw(this->player);
 }
 
 void Player::update(float dt)
 {
-	if (velocity.y <= maxY)
-		velocity += gravity * dt;
+	this->viewport.setCenter(player.getPosition() - sf::Vector2f(0, 25));
+
+	std::cout << player.getPosition().y << std::endl;
+	if (this->velocity.y <= this->maxY)
+		this->velocity += this->gravity * dt;
 
 	this->inputHandle(dt);
-	//std::cout << velocity.y << std::endl;
-	std::cout << onAir << std::endl;
+	this->die();
 }
 
 void Player::inputHandle(float dt)
@@ -40,7 +47,7 @@ void Player::inputHandle(float dt)
 	{
 		this->velocity.x += speed * dt;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !onAir)
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !isOnAir)
 	{
 		this->velocity.y += -maxY * dt;
 	}
@@ -48,14 +55,29 @@ void Player::inputHandle(float dt)
 	this->player.move(this->velocity);
 }
 
-void Player::collision(sf::FloatRect block)
+void Player::collision(const std::vector<sf::FloatRect>& blocks)
 {
-	if (this->player.getGlobalBounds().intersects(block))
+	isOnAnyBlock = false;
+	for (const auto& block : blocks)
 	{
-		this->onAir = false;
-		this->player.setPosition(player.getPosition().x, block.top - size.y / 2);
+		if (this->player.getGlobalBounds().intersects(block))
+		{
+			if (this->velocity.y > 0 && this->player.getPosition().y < block.top)
+			{
+				this->player.setPosition(this->player.getPosition().x, block.top - size.y / 2);
+				this->velocity.y = 0.0f;
+				this->isOnAnyBlock = true;
+				break;
+			}
+		}
 	}
-	else {
-		this->onAir = true;
+	this->isOnAir = !isOnAnyBlock;
+}
+
+void Player::die()
+{
+	if (player.getPosition().y >= 800.0f)
+	{
+		player.setPosition(initialPosition);
 	}
 }

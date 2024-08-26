@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Game::Game() :
-	player(sf::Vector2f(20.0f, 20.0f), 100.0f)
+	player(sf::Vector2f(20.0f, 20.0f), 150.0f)
 {
 	window.create(sf::VideoMode(800, 600), "Platformer");
 	window.setFramerateLimit(60);
@@ -43,6 +43,9 @@ void Game::handleEvents()
 	while (window.pollEvent(event))
 	{
 		if (event.type == sf::Event::Closed)
+			window.close();
+
+		if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
 			window.close();
 	}
 }

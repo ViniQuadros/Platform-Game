@@ -14,4 +14,7 @@ public:
 private:
 	Blocks floorBlock;
 	Blocks platform1;
+	Blocks platform2;
+
+	std::vector<sf::FloatRect> blocks;
 };
