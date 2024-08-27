@@ -11,7 +11,11 @@ public:
 	void render(sf::RenderWindow& window);
 	sf::FloatRect getBoundings();
 
-private:
+protected:
 	sf::RectangleShape block;
 	sf::FloatRect blockBoundings;
+
+private:
+
 };
+
