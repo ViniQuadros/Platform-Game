@@ -23,7 +23,7 @@ void Enemy::kill(Player& player)
 	}
 }
 
-void Enemy::movement(const std::vector<sf::FloatRect>& blocks, float dt)
+void Enemy::movement(const std::vector<sf::FloatRect>& blocks, const std::vector<sf::FloatRect>& invisibleBlocks, float dt)
 {
 	for (const auto& block : blocks)
 	{
@@ -39,6 +39,25 @@ void Enemy::movement(const std::vector<sf::FloatRect>& blocks, float dt)
 			{
 				this->enemy.setPosition(block.left + block.getSize().x + enemy.getSize().x / 2, this->enemy.getPosition().y);
 				this->velocity.x = -speed;
+				break;
+			}
+		}
+	}
+
+	for (const auto& invBlocks : invisibleBlocks)
+	{
+		if (this->enemy.getGlobalBounds().intersects(invBlocks))
+		{
+			if (this->enemy.getPosition().x < invBlocks.left)
+			{
+				this->enemy.setPosition(invBlocks.left - this->enemy.getSize().x / 2, this->enemy.getPosition().y);
+				this->velocity.x = -speed;
+				break;
+			}
+			else if (this->enemy.getPosition().x < invBlocks.left + invBlocks.getSize().x + enemy.getSize().x / 2)
+			{
+				this->enemy.setPosition(invBlocks.left + invBlocks.getSize().x + this->enemy.getSize().x / 2, this->enemy.getPosition().y);
+				this->velocity.x = speed;
 				break;
 			}
 		}

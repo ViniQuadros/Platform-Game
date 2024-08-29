@@ -9,10 +9,11 @@ public:
 
 	void render(sf::RenderWindow& window);
 	void kill(Player& player);
-	void movement(const std::vector<sf::FloatRect>& blocks, float dt);
+	void movement(const std::vector<sf::FloatRect>& blocks, const std::vector<sf::FloatRect>& invisibleBlocks, float dt);
 
 private:
 	sf::RectangleShape enemy;
+
 	sf::Vector2f velocity;
 	float speed;
 };
