@@ -24,7 +24,7 @@ void Player::render(sf::RenderWindow& window)
 	window.setView(this->viewport);
 	window.draw(this->player);
 	//std::cout << "X: " << player.getPosition().x << "Y: " << player.getPosition().y << std::endl;
-	std::cout << velocity.x << std::endl;
+	//std::cout << velocity.x << std::endl;
 }
 
 void Player::update(float dt)
@@ -131,6 +131,11 @@ void Player::collision(const std::vector<sf::FloatRect>& blocks, const std::vect
 sf::FloatRect Player::playerBounds()
 {
 	return player.getGlobalBounds();
+}
+
+sf::Vector2f Player::getPosition()
+{
+	return player.getPosition();
 }
 
 void Player::killHeight()
