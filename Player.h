@@ -15,6 +15,7 @@ public:
 	void restart();
 	void collision(const std::vector<sf::FloatRect>& blocks, const std::vector<sf::FloatRect>& blocksFloor);
 	sf::FloatRect playerBounds();
+	sf::Vector2f getPosition();
 
 private:
 	sf::RectangleShape player;

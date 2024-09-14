@@ -33,7 +33,7 @@ void Game::update()
 {
 	player.update(dt);
 	level.playerCollision(player);
-	level.update(dt);
+	level.update(dt, player);
 }
 
 void Game::handleEvents()
