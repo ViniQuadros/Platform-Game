@@ -7,29 +7,18 @@ class Boss : public Enemy
 public:
     Boss(sf::Vector2f size, sf::Vector2f position, float speed);
 
-    void update(float dt, sf::Vector2f playerPosition);
+    void update(float dt);
     void render(sf::RenderWindow& window) override;
-    void jumpAttack(sf::Vector2f playerPosition);
-    void shootProjectiles(float dt);
+    void movement(const std::vector<sf::FloatRect>& blocks, const std::vector<sf::FloatRect>& invisibleBlocks, float dt) override;
+    void jumpAttack(float dt);
 
 private:
-    void applyGravity(float dt);
-    void resetJump();
-    void handleJump(float dt);
-    void chooseNextAttack();
+    bool canAttack;
+    bool isOnAnyBlock;
 
-    sf::RectangleShape boss;
-    sf::Vector2f velocity;
-    float speed;
-    float gravity;
-    int jumpCount;
-    bool isJumping;
-    sf::Vector2f initialPosition;
-    sf::Vector2f targetPosition;
+    const sf::Vector2f gravity = sf::Vector2f(0.f, 60.f);
+    const float maxY = 5000.0f;
 
-    enum AttackType { None, Jump, Shoot } currentAttack;
-    std::vector<sf::CircleShape> projectiles;
-
-    sf::Clock attackTimer;
-    sf::Time attackInterval;
+    sf::Clock clock;
+    float delay;
 };

@@ -4,175 +4,71 @@
 Boss::Boss(sf::Vector2f size, sf::Vector2f position, float speed) :
     Enemy(size, position, speed)
 {
-    this->boss.setPosition(position);
-    this->boss.setSize(size);
+    this->enemy.setPosition(position);
+    this->enemy.setSize(size);
     this->speed = speed;
     this->velocity.x = speed;
-    this->boss.setOrigin(sf::Vector2f(size.x / 2, size.y / 2));
-
-    this->boss.setFillColor(sf::Color::Magenta);
-    this->currentAttack = None;
-    std::srand(std::time(0));
-    this->gravity = 800.0f;
-    this->jumpCount = 0;
-    this->isJumping = false;
-    this->attackInterval = sf::seconds(2); // Intervalo entre os ataques
+    this->enemy.setOrigin(sf::Vector2f(size.x / 2, size.y / 2));
+    this->enemy.setFillColor(sf::Color::Magenta); 
+    this->canAttack = false;
+    this->isOnAnyBlock = false;
+    this->delay = rand() % 10;
 }
 
-void Boss::update(float dt, sf::Vector2f playerPosition)
+void Boss::update(float dt)
 {
-    std::cout << "X: " << boss.getPosition().x << "Y: " << boss.getPosition().y << std::endl;
-    // Escolhe o próximo ataque após o intervalo
-    if (attackTimer.getElapsedTime() > attackInterval)
+    //std::cout << "X: " << this->enemy.getPosition().x << "Y: " << this->enemy.getPosition().y << std::endl;
+
+    if (this->velocity.y <= this->maxY)
+        this->velocity += this->gravity * dt;
+
+    if (clock.getElapsedTime().asSeconds() > delay)
     {
-        chooseNextAttack();
-        attackTimer.restart();
+        canAttack = true;
+        this->delay = rand() % 10;
+        clock.restart();
     }
 
-    if (currentAttack == Jump)
+    if (canAttack)
     {
-        handleJump(dt);
-    }
-    else if (currentAttack == Shoot)
-    {
-        shootProjectiles(dt);
-    }
-    else
-    {
-        // Caminhar em direção ao player
-        if (playerPosition.x > this->boss.getPosition().x)
-        {
-            velocity.x = speed;
-        }
-        else
-        {
-            velocity.x = -speed;
-        }
-    }
-
-    applyGravity(dt);
-    //this->boss.move(velocity * dt);
-
-    // Reseta a posição inicial no eixo y após os 3 pulos
-    if (isJumping && boss.getPosition().y >= initialPosition.y)
-    {
-        resetJump();
+        jumpAttack(dt);
     }
 }
 
 void Boss::render(sf::RenderWindow& window)
 {
-    window.draw(this->boss);
-
-    // Renderizar projéteis
-    for (auto& projectile : projectiles)
-    {
-        window.draw(projectile);
-    }
+    window.draw(this->enemy);
 }
 
-void Boss::jumpAttack(sf::Vector2f playerPosition)
+void Boss::movement(const std::vector<sf::FloatRect>& blocks, const std::vector<sf::FloatRect>& invisibleBlocks, float dt)
 {
-    if (jumpCount < 3)
-    {
-        this->isJumping = true;
-        this->jumpCount++;
-        this->targetPosition = playerPosition;
-        this->velocity.y = -400.0f;  // Velocidade inicial do pulo
-        this->currentAttack = Jump;
-    }
-}
+    Enemy::movement(blocks, invisibleBlocks, dt);
 
-void Boss::shootProjectiles(float dt)
-{
-    if (projectiles.empty())
+    isOnAnyBlock = false;
+
+    for (const auto& block : blocks)
     {
-        // Cria os projéteis e define a direção deles
-        for (int i = 0; i < 5; i++)
+        if (this->enemy.getGlobalBounds().intersects(block))
         {
-            sf::CircleShape projectile(5.0f);
-            projectile.setFillColor(sf::Color::Yellow);
-            projectile.setPosition(boss.getPosition());
-
-            sf::Vector2f direction;
-
-            switch (i)
+            if (this->velocity.y > 0 && this->enemy.getPosition().y < block.top)
             {
-            case 0: direction = sf::Vector2f(1, 0); break;  // Direita
-            case 1: direction = sf::Vector2f(-1, 0); break; // Esquerda
-            case 2: direction = sf::Vector2f(0, -1); break; // Cima
-            case 3: direction = sf::Vector2f(0, 1); break;  // Baixo
-            case 4: direction = sf::Vector2f(1, 1); break;  // Diagonal
+                this->enemy.setPosition(this->enemy.getPosition().x, block.top - this->enemy.getSize().y / 2);
+                this->velocity.y = 0.0f;
+                this->isOnAnyBlock = true;
+                break;
             }
-
-            projectile.move(direction * speed * dt * 10.0f);  // Ajuste de velocidade
-            projectiles.push_back(projectile);
         }
     }
-
-    // Movimentação dos projéteis
-    for (auto& projectile : projectiles)
-    {
-        sf::Vector2f direction = projectile.getPosition() - boss.getPosition();
-        float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-        if (length > 0)
-        {
-            direction /= length;  // Normaliza a direção
-            projectile.move(direction * speed * dt * 300.0f);
-        }
-    }
-
-    // Remoção dos projéteis após percorrerem uma certa distância
-    if (!projectiles.empty() && projectiles[0].getPosition().x > 800.0f) // Exemplo de distância
-    {
-        projectiles.clear();
-        currentAttack = None;
-    }
 }
 
-void Boss::applyGravity(float dt)
+void Boss::jumpAttack(float dt)
 {
-    if (isJumping)
-    {
-        velocity.y += gravity * dt;
-    }
-    else
-    {
-        velocity.y = 0;
-    }
+    this->velocity.y += -maxY * dt;
+    canAttack = false;
 }
 
-void Boss::resetJump()
-{
-    velocity.y = 0;
-    boss.setPosition(boss.getPosition().x, initialPosition.y);
-    isJumping = false;
 
-    if (jumpCount >= 3)
-    {
-        jumpCount = 0;
-        currentAttack = None;
-    }
-}
 
-void Boss::handleJump(float dt)
-{
-    if (isJumping)
-    {
-        velocity.x = (targetPosition.x - boss.getPosition().x) > 0 ? speed : -speed;
-    }
-}
 
-void Boss::chooseNextAttack()
-{
-    int randomAttack = std::rand() % 2;
 
-    if (randomAttack == 0 && jumpCount == 0)  // Inicia um ataque de pulo
-    {
-        jumpAttack(initialPosition);  // O boss pula na direção do jogador
-    }
-    else  // Atira projéteis
-    {
-        currentAttack = Shoot;
-    }
-}
+

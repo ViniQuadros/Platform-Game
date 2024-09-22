@@ -9,19 +9,18 @@ Level::Level() :
 
 	platform1(sf::Vector2f(700.0f, 300.0f), sf::Vector2f(150.0f, 20.0f)),
 	platform2(sf::Vector2f(1000.0f, 250.0f), sf::Vector2f(120.0f, 20.0f)),
-	platform3(sf::Vector2f(2300.0f, 280.0f), sf::Vector2f(150.0f, 20.0f)),
 
 	invBlock1(sf::Vector2f(890.0f, 400.0f), sf::Vector2f(20.0f, 50.0f)),
 	invBlock2(sf::Vector2f(930.0f, 230.0f), sf::Vector2f(20.0f, 50.0f)),
 	invBlock3(sf::Vector2f(1070.0f, 230.0f), sf::Vector2f(20.0f, 50.0f)),
-	invBlock4(sf::Vector2f(2140.0f, 400.0f), sf::Vector2f(20.0f, 50.0f)),
-	invBlock5(sf::Vector2f(2860.0f, 400.0f), sf::Vector2f(20.0f, 50.0f)),
+	invBlock4(sf::Vector2f(2140.0f, 400.0f), sf::Vector2f(20.0f, 500.0f)),
+	invBlock5(sf::Vector2f(2860.0f, 400.0f), sf::Vector2f(20.0f, 500.0f)),
 
 	enemy1(sf::Vector2f(20.0f, 20.0f), sf::Vector2f(1000.0f, 390.0f), 60.0f),
 	enemy2(sf::Vector2f(20.0f, 20.0f), sf::Vector2f(1000.0f, 230.0f), 30.0f),
-	boss(sf::Vector2f(70.0f, 70.0f), sf::Vector2f(2500.0f, 465.0f), 50.0f)
+	boss(sf::Vector2f(70.0f, 70.0f), sf::Vector2f(2500.0f, 300.0f), 100.0f)
 {
-	blocksTop = { floorBlock.getBoundings(), floorBlock2.getBoundings(), floorBlock3.getBoundings(), floorBlock4.getBoundings(), floorBlock5.getBoundings(),  platform1.getBoundings(), platform2.getBoundings(), platform3.getBoundings() };
+	blocksTop = { floorBlock.getBoundings(), floorBlock2.getBoundings(), floorBlock3.getBoundings(), floorBlock4.getBoundings(), floorBlock5.getBoundings(),  platform1.getBoundings(), platform2.getBoundings() };
 	blocksFloor = { floorBlock.getBoundings(), floorBlock2.getBoundings(), floorBlock3.getBoundings(), floorBlock4.getBoundings(), floorBlock5.getBoundings() };
 	blocksInvisible = { invBlock1.getBoundings(), invBlock2.getBoundings(), invBlock3.getBoundings(), invBlock4.getBoundings(), invBlock5.getBoundings() };
 }
@@ -36,7 +35,6 @@ void Level::render(sf::RenderWindow& window)
 
 	platform1.render(window);
 	platform2.render(window);
-	platform3.render(window);
 
 	enemy1.render(window);
 	enemy2.render(window);
@@ -56,5 +54,5 @@ void Level::update(float dt, Player& player)
 	enemy1.movement(blocksTop, blocksInvisible, dt);
 	enemy2.movement(blocksTop, blocksInvisible, dt);
 	boss.movement(blocksTop, blocksInvisible, dt);
-	boss.update(dt, player.getPosition());
+	boss.update(dt);
 }

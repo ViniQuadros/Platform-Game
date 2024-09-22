@@ -9,7 +9,7 @@ public:
 
 	virtual void render(sf::RenderWindow& window);
 	void kill(Player& player);
-	void movement(const std::vector<sf::FloatRect>& blocks, const std::vector<sf::FloatRect>& invisibleBlocks, float dt);
+	virtual void movement(const std::vector<sf::FloatRect>& blocks, const std::vector<sf::FloatRect>& invisibleBlocks, float dt);
 
 protected:
 	sf::RectangleShape enemy;

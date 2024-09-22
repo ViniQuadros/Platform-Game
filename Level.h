@@ -23,7 +23,6 @@ private:
 
 	Blocks platform1;
 	Blocks platform2;
-	Blocks platform3;
 
 	Blocks invBlock1;
 	Blocks invBlock2;

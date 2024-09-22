@@ -63,5 +63,5 @@ void Enemy::movement(const std::vector<sf::FloatRect>& blocks, const std::vector
 		}
 	}
 
-	enemy.move(velocity * dt);
+	this->enemy.move(velocity * dt);
 }
