@@ -4,15 +4,22 @@
 Boss::Boss(sf::Vector2f size, sf::Vector2f position, float speed) :
     Enemy(size, position, speed)
 {
+    if (!this->enemyTexture.loadFromFile("img/B_Enemy.png"))
+    {
+        std::cout << "Error loading boss texture!" << std::endl;
+    }
+    this->enemy.setTexture(this->enemyTexture);
+    this->enemy.setOrigin(this->enemyTexture.getSize().x / 2, this->enemyTexture.getSize().y / 2);
+    this->enemy.setScale(2, 2);
+
     this->enemy.setPosition(position);
-    this->enemy.setSize(size);
     this->speed = speed;
     this->velocity.x = speed;
-    this->enemy.setOrigin(sf::Vector2f(size.x / 2, size.y / 2));
-    this->enemy.setFillColor(sf::Color::Magenta); 
+    
     this->canAttack = false;
     this->isOnAnyBlock = false;
-    this->delay = rand() % 10;
+    this->delay = rand() % 6;
+    this->scale = 2;
 }
 
 void Boss::update(float dt)
@@ -52,7 +59,7 @@ void Boss::movement(const std::vector<sf::FloatRect>& blocks, const std::vector<
         {
             if (this->velocity.y > 0 && this->enemy.getPosition().y < block.top)
             {
-                this->enemy.setPosition(this->enemy.getPosition().x, block.top - this->enemy.getSize().y / 2);
+                this->enemy.setPosition(this->enemy.getPosition().x, block.top - this->enemy.getGlobalBounds().getSize().y / 2);
                 this->velocity.y = 0.0f;
                 this->isOnAnyBlock = true;
                 break;

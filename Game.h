@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Blocks.h"
 #include "Level.h"
+#include "Goal.h"
 
 class Game
 {
@@ -23,4 +24,5 @@ private:
 
 	Player player;
 	Level level;
+	Goal goal;
 };

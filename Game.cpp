@@ -21,7 +21,7 @@ void Game::run()
 
 void Game::render()
 {
-	window.clear();
+	window.clear(sf::Color(135, 206, 250, 1));
 
 	level.render(window);
 	player.render(window);
@@ -48,5 +48,12 @@ void Game::handleEvents()
 
 		if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
 			window.close();
+
+		//If player recheaches the goal, the window is closed
+		goal.win(player);
+		if (goal.hasEnded() == true)
+		{
+			window.close();
+		}
 	}
 }

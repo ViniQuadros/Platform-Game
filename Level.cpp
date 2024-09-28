@@ -16,9 +16,10 @@ Level::Level() :
 	invBlock4(sf::Vector2f(2140.0f, 400.0f), sf::Vector2f(20.0f, 500.0f)),
 	invBlock5(sf::Vector2f(2860.0f, 400.0f), sf::Vector2f(20.0f, 500.0f)),
 
-	enemy1(sf::Vector2f(20.0f, 20.0f), sf::Vector2f(1000.0f, 390.0f), 60.0f),
-	enemy2(sf::Vector2f(20.0f, 20.0f), sf::Vector2f(1000.0f, 230.0f), 30.0f),
-	boss(sf::Vector2f(70.0f, 70.0f), sf::Vector2f(2500.0f, 300.0f), 100.0f)
+	enemy1(sf::Vector2f(20.0f, 20.0f), sf::Vector2f(1000.0f, 380.0f), 60.0f),
+	enemy2(sf::Vector2f(20.0f, 20.0f), sf::Vector2f(1000.0f, 220.0f), 30.0f),
+	boss(sf::Vector2f(70.0f, 70.0f), sf::Vector2f(2500.0f, 100.0f), 170.0f),
+	boss2(sf::Vector2f(70.0f, 70.0f), sf::Vector2f(2300.0f, 100.0f), 160.0f)
 {
 	blocksTop = { floorBlock.getBoundings(), floorBlock2.getBoundings(), floorBlock3.getBoundings(), floorBlock4.getBoundings(), floorBlock5.getBoundings(),  platform1.getBoundings(), platform2.getBoundings() };
 	blocksFloor = { floorBlock.getBoundings(), floorBlock2.getBoundings(), floorBlock3.getBoundings(), floorBlock4.getBoundings(), floorBlock5.getBoundings() };
@@ -39,6 +40,9 @@ void Level::render(sf::RenderWindow& window)
 	enemy1.render(window);
 	enemy2.render(window);
 	boss.render(window);
+	boss2.render(window);
+
+	goal.render(window);
 }
 
 void Level::playerCollision(Player& player)
@@ -47,12 +51,18 @@ void Level::playerCollision(Player& player)
 	enemy1.kill(player);
 	enemy2.kill(player);
 	boss.kill(player);
+	boss2.kill(player);
 }
 
 void Level::update(float dt, Player& player)
 {
 	enemy1.movement(blocksTop, blocksInvisible, dt);
 	enemy2.movement(blocksTop, blocksInvisible, dt);
+
 	boss.movement(blocksTop, blocksInvisible, dt);
 	boss.update(dt);
+	boss2.movement(blocksTop, blocksInvisible, dt);
+	boss2.update(dt);
+
+	goal.update(dt);
 }

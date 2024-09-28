@@ -2,12 +2,17 @@
 
 Enemy::Enemy(sf::Vector2f size, sf::Vector2f position, float speed)
 {
+	if (!this->enemyTexture.loadFromFile("img/C_Enemy.png"))
+	{
+		std::cout << "Error loading enemy texture!" << std::endl;
+	}
+	enemy.setTexture(enemyTexture);
+	enemy.setOrigin(enemyTexture.getSize().x / 2, enemyTexture.getSize().y / 2);
+
 	this->enemy.setPosition(position);
-	this->enemy.setSize(size);
 	this->speed = speed;
 	this->velocity.x = speed;
-	this->enemy.setOrigin(sf::Vector2f(size.x / 2, size.y / 2));
-	this->enemy.setFillColor(sf::Color::Red);
+	this->scale = 1;
 }
 
 void Enemy::render(sf::RenderWindow& window)
@@ -31,14 +36,16 @@ void Enemy::movement(const std::vector<sf::FloatRect>& blocks, const std::vector
 		{
 			if (this->enemy.getPosition().x < block.left)
 			{
-				this->enemy.setPosition(block.left - enemy.getSize().x / 2, this->enemy.getPosition().y);
+				this->enemy.setPosition(block.left - this->enemy.getGlobalBounds().getSize().x / 2, this->enemy.getPosition().y);
 				this->velocity.x = -speed;
+				this->enemy.setScale(-scale, scale);
 				break;
 			}
-			else if (this->enemy.getPosition().x < block.left + block.getSize().x + enemy.getSize().x / 2)
+			else if (this->enemy.getPosition().x < block.left + block.getSize().x + this->enemy.getGlobalBounds().getSize().x / 2)
 			{
-				this->enemy.setPosition(block.left + block.getSize().x + enemy.getSize().x / 2, this->enemy.getPosition().y);
+				this->enemy.setPosition(block.left + block.getSize().x + this->enemy.getGlobalBounds().getSize().x / 2, this->enemy.getPosition().y);
 				this->velocity.x = -speed;
+				this->enemy.setScale(scale, scale);
 				break;
 			}
 		}
@@ -50,14 +57,16 @@ void Enemy::movement(const std::vector<sf::FloatRect>& blocks, const std::vector
 		{
 			if (this->enemy.getPosition().x < invBlocks.left)
 			{
-				this->enemy.setPosition(invBlocks.left - this->enemy.getSize().x / 2, this->enemy.getPosition().y);
+				this->enemy.setPosition(invBlocks.left - this->enemy.getGlobalBounds().getSize().x / 2, this->enemy.getPosition().y);
 				this->velocity.x = -speed;
+				this->enemy.setScale(-scale, scale);
 				break;
 			}
-			else if (this->enemy.getPosition().x < invBlocks.left + invBlocks.getSize().x + enemy.getSize().x / 2)
+			else if (this->enemy.getPosition().x < invBlocks.left + invBlocks.getSize().x + this->enemy.getGlobalBounds().getSize().x / 2)
 			{
-				this->enemy.setPosition(invBlocks.left + invBlocks.getSize().x + this->enemy.getSize().x / 2, this->enemy.getPosition().y);
+				this->enemy.setPosition(invBlocks.left + invBlocks.getSize().x + this->enemy.getGlobalBounds().getSize().x / 2, this->enemy.getPosition().y);
 				this->velocity.x = speed;
+				this->enemy.setScale(scale, scale);
 				break;
 			}
 		}

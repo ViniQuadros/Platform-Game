@@ -16,7 +16,7 @@ private:
     bool canAttack;
     bool isOnAnyBlock;
 
-    const sf::Vector2f gravity = sf::Vector2f(0.f, 60.f);
+    const sf::Vector2f gravity = sf::Vector2f(0.f, 80.f);
     const float maxY = 5000.0f;
 
     sf::Clock clock;

@@ -12,10 +12,12 @@ public:
 	virtual void movement(const std::vector<sf::FloatRect>& blocks, const std::vector<sf::FloatRect>& invisibleBlocks, float dt);
 
 protected:
-	sf::RectangleShape enemy;
+	sf::Texture enemyTexture;
+	sf::Sprite enemy;
 
 	sf::Vector2f velocity;
 	float speed;
+	int scale;
 
 private:
 

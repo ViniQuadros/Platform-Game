@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Boss.h"
+#include "Goal.h"
 
 class Level
 {
@@ -33,6 +34,9 @@ private:
 	Enemy enemy1;
 	Enemy enemy2;
 	Boss boss;
+	Boss boss2;
+
+	Goal goal;
 
 	std::vector<sf::FloatRect> blocksTop;
 	std::vector<sf::FloatRect> blocksFloor;

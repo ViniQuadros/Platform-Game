@@ -5,6 +5,7 @@ Blocks::Blocks(sf::Vector2f position, sf::Vector2f size)
 	this->block.setPosition(position);
 	this->block.setSize(size);
 	this->block.setOrigin(sf::Vector2f(size.x / 2, size.y / 2));
+	this->block.setFillColor(sf::Color(88, 50, 20));
 	this->blockBoundings = this->block.getGlobalBounds();
 }
 
